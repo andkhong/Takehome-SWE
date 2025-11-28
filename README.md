@@ -67,8 +67,6 @@ These are required for a complete submission:
 - [ ] **Send Message**: Input to send a user message
 - [ ] **Streaming Response**: AI response appears word-by-word as it streams
 - [ ] **Error Handling**: Show error message when AI request fails (network issues, API errors)
-- [ ] **Retry Failed**: Button to retry a failed AI response
-- [ ] **Auto-scroll**: Chat scrolls to bottom as new content arrives
 
 ### Extensions (If Time Permits)
 
@@ -161,19 +159,15 @@ messages (id, conversation_id, role, content, status, error_message, created_at)
 ## Submission
 
 1. **Fork this repository** to your own GitHub account
-
 2. Clone your fork and complete the challenge:
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/takehome-streaming-chat.git
    cd takehome-streaming-chat
    ```
-
 3. Push your completed work to your forked repository
-
 4. Invite `Gregory-PublishAI` as a collaborator to your forked repository
-
 5. Fill in the `NOTES.md` file with your implementation notes
-
 6. Email us with the link to your forked repository when ready
 
 ## Questions?
