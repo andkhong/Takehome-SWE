@@ -61,12 +61,12 @@ Visit http://localhost:5173 to see the starter app.
 
 These are required for a complete submission:
 
-- [ ] **Conversation List**: Display all conversations in the sidebar
-- [ ] **Create Conversation**: Button to start a new conversation
-- [ ] **View Messages**: Show message history when selecting a conversation
-- [ ] **Send Message**: Input to send a user message
-- [ ] **Streaming Response**: AI response appears word-by-word as it streams
-- [ ] **Error Handling**: Show error message when AI request fails (network issues, API errors)
+- [x] **Conversation List**: Display all conversations in the sidebar
+- [x] **Create Conversation**: Button to start a new conversation
+- [x] **View Messages**: Show message history when selecting a conversation
+- [x] **Send Message**: Input to send a user message
+- [x] **Streaming Response**: AI response appears word-by-word as it streams
+- [x] **Error Handling**: Show error message when AI request fails (network issues, API errors)
 
 ### Extensions (If Time Permits)
 
