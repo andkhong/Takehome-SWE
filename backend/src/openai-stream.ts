@@ -27,8 +27,6 @@ export interface StreamOptions {
   instructions?: string;
   /** Previous messages for context */
   conversationHistory?: Message[];
-  /** Milliseconds between streaming chunks (default: 30) */
-  streamDelay?: number;
 }
 
 const DEFAULT_INSTRUCTIONS = `You are a helpful AI assistant for a construction document management platform called Muro.
@@ -56,11 +54,9 @@ export function createAIStream(
   const {
     instructions = DEFAULT_INSTRUCTIONS,
     conversationHistory = [],
-    streamDelay = 30,
   } = options;
 
   let cancelled = false;
-  let timeoutId: NodeJS.Timeout | null = null;
 
   // Build messages array for chat completion
   const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
@@ -74,40 +70,35 @@ export function createAIStream(
 
   (async () => {
     try {
-      // Call OpenAI Chat Completions API
-      const response = await openai.chat.completions.create({
+      // Call OpenAI Chat Completions API with streaming enabled
+      const stream = await openai.chat.completions.create({
         model: 'gpt-4o-mini', // Fast and cost-effective
         messages,
         max_tokens: 1024,
+        stream: true, // Enable true streaming
       });
 
       if (cancelled) return;
 
-      // Get the response text
-      const fullText = response.choices[0]?.message?.content || '';
+      let fullText = '';
 
-      if (!fullText) {
-        throw new Error('No response from AI');
+      // Process the stream as chunks arrive from OpenAI
+      for await (const chunk of stream) {
+        if (cancelled) break;
+
+        const content = chunk.choices[0]?.delta?.content;
+        if (content) {
+          fullText += content;
+          onChunk(content);
+        }
       }
 
-      // Stream the response word by word for a natural typing effect
-      const words = fullText.split(/(\s+)/); // Keep whitespace
-
-      const streamWord = (index: number) => {
-        if (cancelled || index >= words.length) {
-          if (!cancelled) {
-            onDone(fullText);
-          }
-          return;
+      if (!cancelled) {
+        if (!fullText) {
+          throw new Error('No response from AI');
         }
-
-        const word = words[index];
-        onChunk(word);
-
-        timeoutId = setTimeout(() => streamWord(index + 1), streamDelay);
-      };
-
-      streamWord(0);
+        onDone(fullText);
+      }
     } catch (error) {
       if (cancelled) return;
 
@@ -136,9 +127,6 @@ export function createAIStream(
   // Return cleanup function
   return () => {
     cancelled = true;
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
   };
 }
 

@@ -1,3 +1,7 @@
+# Requirements
+
+Node v22.10.0+
+
 # Implementation Notes
 
 Please fill this in before submitting.
